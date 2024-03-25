@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+
 double hit_sphere(const point3& center, double radius, const ray& r) {
 
     vec3 oc = r.origin() - center;
@@ -18,6 +19,7 @@ double hit_sphere(const point3& center, double radius, const ray& r) {
         return (-half_b -sqrt(discriminant) ) / a;
     }
 }
+
 
 color ray_color(const ray& r) {
     auto t = hit_sphere(point3(0, 0,-1), 0.5, r);
