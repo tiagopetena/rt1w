@@ -16,15 +16,17 @@ class sphere : public hittable {
 
             auto discriminant = half_b*half_b - a*c;
             
-            if (discriminant < 0)
+            if (discriminant < 0) {
                 return false;
+            }
             auto sqrtd = sqrt(discriminant);
             
             auto root = (-half_b - sqrtd) / a;
             if (root <= ray_tmin || ray_tmax <= root) {
                 root = (-half_b + sqrtd) / a;
-                if ( root <= ray_tmin || ray_tmax <= root)
+                if ( root <= ray_tmin || ray_tmax <= root) {
                     return false;
+                }
             }
 
             rec.t = root;

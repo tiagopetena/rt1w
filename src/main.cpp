@@ -34,8 +34,7 @@ int main() {
     // World
     hittable_list world;
 
-    world.add(std::make_shared<sphere>(point3(0,0,-0.6), 0.5));
-    world.add(std::make_shared<sphere>(point3(0.3,0,-1),0.666666));
+    world.add(std::make_shared<sphere>(point3(0,0,-1), 0.5));
     world.add(std::make_shared<sphere>(point3(0,-100.5,-1), 100));
 
     // Camera
