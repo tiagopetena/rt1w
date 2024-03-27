@@ -7,12 +7,15 @@
 #include "color.hpp"
 #include "vec3.hpp"
 #include "math_constants.hpp"
+#include "random.hpp"
+
 
 class camera {
     public:
         int sensor_height = 720;
         int sensor_width = 1280;
-        
+        int spp = 10;
+
         void render(const hittable& world) {
             init();
             
@@ -21,12 +24,12 @@ class camera {
             for(int j = 0; j < sensor_height; ++j) {
                 std::clog << "\rScanlines remaining: " << (sensor_height - j) << std::flush;
                 for (int i = 0; i < sensor_width; ++i) {
-                    point3 pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-                    vec3 ray_direction = pixel_center - origin;
-                    ray r(origin, ray_direction);
-
-                    color pixel_color = ray_color(r, world);
-                    write_color(std::cout, pixel_color);
+                    color pixel_color(0, 0, 0);
+                    for (int sample = 0; sample < spp; ++sample) {
+                        ray r = get_ray(i, j);
+                        pixel_color += ray_color(r, world);
+                    }
+                    write_color(std::cout, pixel_color, spp);
                 }
             }
         std::clog << "\rDone.                 \n";
@@ -63,6 +66,25 @@ class camera {
                 - viewport_u/2 
                 - viewport_v/2;
             pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+        }
+
+        ray get_ray(int i, int j) {
+            // Get random ray for the pixel at location i,j
+            
+            auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
+            auto pixel_sample = pixel_center + pixel_sample_square();
+
+            auto ray_origin = origin;
+            auto ray_direction = pixel_sample - ray_origin;
+            
+            return ray(ray_origin, ray_direction);
+        }
+
+        vec3 pixel_sample_square() const {
+            auto px = -0.5 + random_double();
+            auto py = -0.5 + random_double();
+
+            return (px * pixel_delta_u) + (py * pixel_delta_v);
         }
 
         color ray_color(const ray& r, const hittable& world) {
