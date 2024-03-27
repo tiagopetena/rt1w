@@ -101,8 +101,8 @@ class camera {
             }
 
             vec3 unit_direction = unit_vector(r.direction());
-            double a = 0.5*(unit_direction.y() + 1.0);
-            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.7);
+            double a = pow(0.5*(unit_direction.y() + 1.0), 1/8.0);
+            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.666666);
         }
 
 };
