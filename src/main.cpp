@@ -20,7 +20,7 @@ int main() {
     cam.sensor_width = 1280;
     cam.sensor_height = 720;
     cam.spp = 10;
-
+    cam.max_bounces = 12;
     // Rendering
     cam.render(world);
 }
