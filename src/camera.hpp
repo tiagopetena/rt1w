@@ -6,7 +6,7 @@
 #include "hittable.hpp"
 #include "color.hpp"
 #include "vec3.hpp"
-
+#include "math_constants.hpp"
 
 class camera {
     public:
@@ -19,7 +19,7 @@ class camera {
             std::cout << "P3\n" << sensor_width << ' ' << sensor_height << "\n255\n";
 
             for(int j = 0; j < sensor_height; ++j) {
-                std::clog << "\rScanlines remaining: " << (sensor_height - j) << "       " << std::flush;
+                std::clog << "\rScanlines remaining: " << (sensor_height - j) << std::flush;
                 for (int i = 0; i < sensor_width; ++i) {
                     point3 pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
                     vec3 ray_direction = pixel_center - origin;
@@ -53,8 +53,8 @@ class camera {
             vec3 viewport_v = vec3(0, -viewport_height, 0);
 
             // Consider deltas due to pixel spacing
-            vec3 pixel_delta_u = viewport_u / sensor_width;
-            vec3 pixel_delta_v = viewport_v / sensor_height;
+            pixel_delta_u = viewport_u / sensor_width;
+            pixel_delta_v = viewport_v / sensor_height;
 
             // Upper left pixel location
             point3 viewport_upper_left =
@@ -62,7 +62,7 @@ class camera {
                 - vec3(0, 0, focal_length)
                 - viewport_u/2 
                 - viewport_v/2;
-            point3 pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+            pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
         }
 
         color ray_color(const ray& r, const hittable& world) {
@@ -77,6 +77,5 @@ class camera {
         }
 
 };
-
 
 #endif

@@ -1,13 +1,8 @@
 #include "camera.hpp"
-#include "math_constants.hpp"
-#include "hittable.hpp"
 #include "hittable_list.hpp"
 #include "sphere.hpp"
-#include "color.hpp"
-#include "ray.hpp"
 #include "vec3.hpp"
 
-#include <iostream>
 #include <memory>
 
 
@@ -23,7 +18,7 @@ int main() {
     camera cam;
 
     cam.sensor_width = 1280;
-    cam.sensor_height = 1920;
+    cam.sensor_height = 720;
 
     // Rendering
     cam.render(world);
