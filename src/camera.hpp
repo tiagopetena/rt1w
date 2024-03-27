@@ -45,7 +45,7 @@ class camera {
             
             origin = point3(0, 0, 0);
 
-            double focal_length = 1.0;
+            double focal_length = 2.0;
             double aspect_ratio = static_cast<double>(sensor_width) / static_cast<double>(sensor_height);
 
             double viewport_height = 2.0;
@@ -90,12 +90,13 @@ class camera {
         color ray_color(const ray& r, const hittable& world) {
             hit_record rec;
             if (world.hit(r, interval(0, INF), rec)) {
-                return 0.5 * (rec.normal + color(1,1,1));
+                vec3 direction = random_on_hemisphere(rec.normal);
+                return 0.5 * ray_color(ray(rec.p, direction), world);
             }
 
             vec3 unit_direction = unit_vector(r.direction());
             double a = 0.5*(unit_direction.y() + 1.0);
-            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.0, 0.0, 0.999999999);
+            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.7);
         }
 
 };
