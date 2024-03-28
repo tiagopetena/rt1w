@@ -96,12 +96,12 @@ class camera {
             }
 
             if (world.hit(r, interval(0.001, INF), rec)) {
-                vec3 direction = random_on_hemisphere(rec.normal);
+                vec3 direction = rec.normal + random_unit_vector();
                 return 0.5 * ray_color(ray(rec.p, direction), bounces - 1, world);
             }
 
             vec3 unit_direction = unit_vector(r.direction());
-            double a = pow(0.5*(unit_direction.y() + 1.0), 1/8.0);
+            double a = 0.5*(unit_direction.y() + 1.0);
             return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.666666);
         }
 
