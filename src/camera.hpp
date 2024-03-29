@@ -17,6 +17,7 @@ class camera {
         int sensor_width = 1280;
         int spp = 10;
         int max_bounces = 12;
+        double vfov = 90;
 
         void render(const hittable& world) {
             init();
@@ -48,9 +49,10 @@ class camera {
             origin = point3(0, 0, 0);
 
             double focal_length = 2.0;
+            auto theta = degrees_to_radians(vfov);
+            auto h = tan(theta/2);
             double aspect_ratio = static_cast<double>(sensor_width) / static_cast<double>(sensor_height);
-
-            double viewport_height = 2.0;
+            auto viewport_height = 2*h*focal_length;
             double viewport_width = viewport_height * aspect_ratio;
 
             // Viewport edges vectors
