@@ -1,4 +1,6 @@
 #include "camera.hpp"
+#include "color.hpp"
+#include "material.hpp"
 #include "hittable_list.hpp"
 #include "sphere.hpp"
 #include "vec3.hpp"
@@ -10,12 +12,20 @@ int main() {
 
     // World
     hittable_list world;
+    
+    auto material_ground = std::make_shared<lambertian>(color(0.2, 0.8, 0.1));
+    auto material_center = std::make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    auto material_left = std::make_shared<lambertian>(color(0.2, 0.2, 0.2));
+    auto material_right = std::make_shared<lambertian>(color(0.7, 0.7, 0.7));
+    auto material_metal = std::make_shared<metal>(color(0.5, 0.5, 0.5));
+    auto material_metal_dark = std::make_shared<metal>(color(0.85, 0.85, 0.85));
 
-    world.add(std::make_shared<sphere>(point3(0,0,-1), 0.25));
-    world.add(std::make_shared<sphere>(point3(-101,0,-1), 100));
-    world.add(std::make_shared<sphere>(point3(0,0,-101), 100));
-    world.add(std::make_shared<sphere>(point3(0,102.5,-1), 100));
-    world.add(std::make_shared<sphere>(point3(0,0,101.1), 100));
+    world.add(std::make_shared<sphere>(point3( 0.0 , -100.25, -1.0), 100.0, material_ground));
+    world.add(std::make_shared<sphere>(point3( 0.0 ,    0.0 , -1.0),   0.25, material_center));
+    world.add(std::make_shared<sphere>(point3(-0.52,    0.0 , -1.0),   0.25, material_left));
+    world.add(std::make_shared<sphere>(point3( 0.52,    0.0 , -1.0),   0.25, material_right));
+    world.add(std::make_shared<sphere>(point3(-0.25,   -0.125 , -0.55),   0.10, material_metal));
+    world.add(std::make_shared<sphere>(point3( 0.25,   -0.125 , -0.55),   0.10, material_metal_dark));
 
     // Camera
     camera cam;
