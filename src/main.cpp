@@ -17,22 +17,22 @@ int main() {
     auto material_center = std::make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material_left = std::make_shared<lambertian>(color(0.2, 0.2, 0.2));
     auto material_right = std::make_shared<lambertian>(color(0.7, 0.7, 0.7));
-    auto material_metal = std::make_shared<metal>(color(0.5, 0.5, 0.5));
-    auto material_metal_dark = std::make_shared<metal>(color(0.85, 0.85, 0.85));
+    auto material_metal = std::make_shared<metal>(color(0.75, 0.75, 0.75), 0.1);
+    auto material_metal_rough = std::make_shared<metal>(color(0.75, 0.75, 0.75), 0.8);
 
     world.add(std::make_shared<sphere>(point3( 0.0 , -100.25, -1.0), 100.0, material_ground));
     world.add(std::make_shared<sphere>(point3( 0.0 ,    0.0 , -1.0),   0.25, material_center));
     world.add(std::make_shared<sphere>(point3(-0.52,    0.0 , -1.0),   0.25, material_left));
     world.add(std::make_shared<sphere>(point3( 0.52,    0.0 , -1.0),   0.25, material_right));
     world.add(std::make_shared<sphere>(point3(-0.25,   -0.125 , -0.55),   0.10, material_metal));
-    world.add(std::make_shared<sphere>(point3( 0.25,   -0.125 , -0.55),   0.10, material_metal_dark));
+    world.add(std::make_shared<sphere>(point3( 0.25,   -0.125 , -0.55),   0.10, material_metal_rough));
 
     // Camera
     camera cam;
 
     cam.sensor_width = 1280;
     cam.sensor_height = 720;
-    cam.spp = 100;
+    cam.spp = 10;
     cam.max_bounces = 12;
   
     // Rendering
