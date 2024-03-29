@@ -24,15 +24,15 @@ int main() {
     world.add(std::make_shared<sphere>(point3( 0.0 ,    0.0 , -1.0),   0.25, material_center));
     world.add(std::make_shared<sphere>(point3(-0.52,    0.0 , -1.0),   0.25, material_left));
     world.add(std::make_shared<sphere>(point3( 0.52,    0.0 , -1.0),   0.25, material_right));
-    world.add(std::make_shared<sphere>(point3(-0.25,   -0.125 , -0.55),   0.10, material_metal));
-    world.add(std::make_shared<sphere>(point3( 0.25,   -0.125 , -0.55),   0.10, material_metal_rough));
+    world.add(std::make_shared<sphere>(point3(-0.25,   -0.15 , -0.55),   0.10, material_metal));
+    world.add(std::make_shared<sphere>(point3( 0.25,   -0.15 , -0.55),   0.10, material_metal_rough));
 
     // Camera
     camera cam;
 
     cam.sensor_width = 1280;
     cam.sensor_height = 720;
-    cam.spp = 10;
+    cam.spp = 100;
     cam.max_bounces = 12;
   
     // Rendering
