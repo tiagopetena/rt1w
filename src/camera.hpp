@@ -18,6 +18,9 @@ class camera {
         int spp = 10;
         int max_bounces = 12;
         double vfov = 90;
+        point3 lookfrom = point3(0,0,-1);
+        point3 lookat = point3(0,0,0);
+        vec3 vup = vec3(0,1,0);
 
         void render(const hittable& world) {
             init();
@@ -43,21 +46,27 @@ class camera {
         point3 pixel00_loc;
         vec3 pixel_delta_u;
         vec3 pixel_delta_v;
+        vec3 u, v, w;
 
         void init() {
             
-            origin = point3(0, 0, 0);
+            origin = lookfrom;
 
-            double focal_length = 2.0;
+            double focal_length = (lookfrom - lookat).length();
             auto theta = degrees_to_radians(vfov);
             auto h = tan(theta/2);
             double aspect_ratio = static_cast<double>(sensor_width) / static_cast<double>(sensor_height);
             auto viewport_height = 2*h*focal_length;
             double viewport_width = viewport_height * aspect_ratio;
 
+            // Calculate camera basis vectors
+            w = unit_vector(lookfrom - lookat);
+            u = unit_vector(cross(vup, w));
+            v = cross(w, u);
+
             // Viewport edges vectors
-            vec3 viewport_u = vec3(viewport_width, 0, 0);
-            vec3 viewport_v = vec3(0, -viewport_height, 0);
+            vec3 viewport_u = viewport_width * u; 
+            vec3 viewport_v = viewport_height * (-v);
 
             // Consider deltas due to pixel spacing
             pixel_delta_u = viewport_u / sensor_width;
@@ -66,7 +75,7 @@ class camera {
             // Upper left pixel location
             point3 viewport_upper_left =
                 origin
-                - vec3(0, 0, focal_length)
+                - (focal_length * w)
                 - viewport_u/2 
                 - viewport_v/2;
             pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
