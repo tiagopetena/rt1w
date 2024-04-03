@@ -9,6 +9,11 @@
 #include "vec3.hpp"
 #include "math_constants.hpp"
 #include "random.hpp"
+#include "exr.hpp"
+
+#include <ImfRgbaFile.h>
+#include <ImfArray.h>
+#include <iostream>
 
 
 class camera {
@@ -29,6 +34,7 @@ class camera {
             init();
             
             std::cout << "P3\n" << sensor_width << ' ' << sensor_height << "\n255\n";
+            Imf::Array2D<Imf::Rgba> pixels(sensor_width, sensor_height);
 
             for(int j = 0; j < sensor_height; ++j) {
                 std::clog << "\rScanlines remaining: " << (sensor_height - j) << std::flush;
@@ -38,9 +44,12 @@ class camera {
                         ray r = get_ray(i, j);
                         pixel_color += ray_color(r, max_bounces, world);
                     }
-                    write_color(std::cout, pixel_color, spp);
+                    // write_color(std::cout, pixel_color, spp);
+                    write_pixel_color(pixels, i, j, pixel_color, spp);
                 }
             }
+        write_exr(pixels , sensor_width, sensor_height);
+
         std::clog << "\rDone.                 \n";
         }
 
@@ -88,6 +97,7 @@ class camera {
             auto defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
             defocus_disk_u = u * defocus_radius;
             defocus_disk_v = v * defocus_radius;
+            
         }
 
         ray get_ray(int i, int j) {

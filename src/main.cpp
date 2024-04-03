@@ -7,6 +7,9 @@
 
 #include <memory>
 
+#include <ImfRgbaFile.h>
+#include <ImfArray.h>
+#include <iostream>
 
 int main() {
 
@@ -32,17 +35,19 @@ int main() {
     // Camera
     camera cam;
 
-    cam.sensor_width = 1280;
+    cam.sensor_width = 720;
     cam.sensor_height = 720;
     cam.vfov = 65;
     cam.lookfrom = point3(0, 0, 0);
     cam.lookat = point3(0,0,-1);
     cam.vup = vec3(0,1,0);
-    cam.spp = 1000;
+    cam.spp = 20;
     cam.max_bounces = 12;
     cam.defocus_angle = 1.0;
     cam.focus_dist = 1.0;
   
     // Rendering
     cam.render(world);
+
+    return 0;
 }
