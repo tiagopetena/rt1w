@@ -38,8 +38,10 @@ int main() {
     cam.lookfrom = point3(0, 0, 0);
     cam.lookat = point3(0,0,-1);
     cam.vup = vec3(0,1,0);
-    cam.spp = 1;
+    cam.spp = 1000;
     cam.max_bounces = 12;
+    cam.defocus_angle = 1.0;
+    cam.focus_dist = 1.0;
   
     // Rendering
     cam.render(world);
