@@ -9,6 +9,11 @@
 #include "vec3.hpp"
 #include "math_constants.hpp"
 #include "random.hpp"
+#include "exr.hpp"
+
+#include <ImfRgbaFile.h>
+#include <ImfArray.h>
+#include <iostream>
 
 
 class camera {
@@ -25,10 +30,13 @@ class camera {
         double defocus_angle = 10;
         double focus_dist = 10;
 
+        color background;
+
         void render(const hittable& world) {
             init();
             
             std::cout << "P3\n" << sensor_width << ' ' << sensor_height << "\n255\n";
+            Imf::Array2D<Imf::Rgba> pixels(sensor_width, sensor_height);
 
             for(int j = 0; j < sensor_height; ++j) {
                 std::clog << "\rScanlines remaining: " << (sensor_height - j) << std::flush;
@@ -38,9 +46,12 @@ class camera {
                         ray r = get_ray(i, j);
                         pixel_color += ray_color(r, max_bounces, world);
                     }
-                    write_color(std::cout, pixel_color, spp);
+                    // write_color(std::cout, pixel_color, spp);
+                    write_pixel_color(pixels, i, j, pixel_color, spp);
                 }
             }
+        write_exr(pixels , sensor_width, sensor_height);
+
         std::clog << "\rDone.                 \n";
         }
 
@@ -88,6 +99,7 @@ class camera {
             auto defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
             defocus_disk_u = u * defocus_radius;
             defocus_disk_v = v * defocus_radius;
+            
         }
 
         ray get_ray(int i, int j) {
@@ -121,18 +133,20 @@ class camera {
                 return color(0, 0, 0);
             }
 
-            if (world.hit(r, interval(0.001, INF), rec)) {
-                ray scattered;
-                color attenuation;
-                if (rec.mat->scatter(r, rec, attenuation, scattered)) {
-                    return attenuation * ray_color(scattered, bounces - 1, world);
-                }
-                return color(0, 0, 0);
+            if (!world.hit(r, interval(0.001, INF), rec)) {
+                return background;
+            }
+        
+            ray scattered;
+            color attenuation;
+            color color_from_emission = rec.mat->emitted();
+            if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+                return color_from_emission;
             }
 
-            vec3 unit_direction = unit_vector(r.direction());
-            double a = 0.5*(unit_direction.y() + 1.0);
-            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.666666);
+            color color_from_scatter = attenuation * ray_color(scattered, bounces - 1, world);
+
+            return color_from_emission + color_from_scatter;
         }
 
 };
