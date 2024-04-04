@@ -5,10 +5,15 @@
 #include "color.hpp"
 #include "vec3.hpp"
 #include "hittable.hpp"
+#include <memory>
 
 class material {
     public:
         virtual ~material() = default;
+
+        virtual color emitted() const {
+            return color(0, 0, 0);
+        }
 
         virtual bool scatter(
             const ray& r_in,
@@ -39,6 +44,24 @@ class lambertian : public material {
         color albedo;
 };
 
+class diffuse_light : public material {
+    public:
+        diffuse_light(const color& a) : emit(a) {}
+
+        bool scatter(const ray& r_in, const hit_record& rec, color& atternuation, ray& scattered)
+        const override {
+            return false;
+        }
+
+        color emitted() const override {
+            return emit;
+        }
+
+    private:
+        color emit;
+        
+
+};
 
 class metal : public material {
     public:

@@ -30,6 +30,8 @@ class camera {
         double defocus_angle = 10;
         double focus_dist = 10;
 
+        color background;
+
         void render(const hittable& world) {
             init();
             
@@ -131,18 +133,20 @@ class camera {
                 return color(0, 0, 0);
             }
 
-            if (world.hit(r, interval(0.001, INF), rec)) {
-                ray scattered;
-                color attenuation;
-                if (rec.mat->scatter(r, rec, attenuation, scattered)) {
-                    return attenuation * ray_color(scattered, bounces - 1, world);
-                }
-                return color(0, 0, 0);
+            if (!world.hit(r, interval(0.001, INF), rec)) {
+                return background;
+            }
+        
+            ray scattered;
+            color attenuation;
+            color color_from_emission = rec.mat->emitted();
+            if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+                return color_from_emission;
             }
 
-            vec3 unit_direction = unit_vector(r.direction());
-            double a = 0.5*(unit_direction.y() + 1.0);
-            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.2, 0.2, 0.666666);
+            color color_from_scatter = attenuation * ray_color(scattered, bounces - 1, world);
+
+            return color_from_emission + color_from_scatter;
         }
 
 };
