@@ -140,7 +140,7 @@ class camera {
             ray scattered;
             color attenuation;
             color color_from_emission = rec.mat->emitted();
-            if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+            if (!rec.mat->scatter(r, rec, attenuation, scattered)) {
                 return color_from_emission;
             }
 

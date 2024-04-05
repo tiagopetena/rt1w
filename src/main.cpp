@@ -36,8 +36,8 @@ int main() {
     // Camera
     camera cam;
 
-    cam.sensor_width = 720;
-    cam.sensor_height = 720;
+    cam.sensor_width = 1000;
+    cam.sensor_height = 1000;
     cam.vfov = 65;
     cam.lookfrom = point3(0, 0, 0);
     cam.lookat = point3(0,0,-1);
